@@ -1,3 +1,5 @@
+import random
+
 # welcome prompt
 welcome = """
 *******************************
@@ -30,19 +32,20 @@ number of the dice e.g. three 5s = 150 points. If you get three doubles then you
 
 # prompt user as to whether they would like to roll again or bank current points
 play_or_bank = """
-*************************************
+******************************************
 Play again or bank what you have?
 Type 'P' to play and 'B' to bank.
 (opting to bank will result in being
-asked to select die you want to keep)
-*************************************
+asked to select die you want to set aside)
+******************************************
 """
 
 # ask the user which dice they would like to bank
 bank_dice = """
-*************************************
+********************************************
 Which numbers would you like to bank?
-*************************************
+(please enter numbers serparated by a space)
+********************************************
 """
 
 # prompt the user as to whether they would like to roll again
@@ -59,15 +62,64 @@ Enter your score for this round (be honest!):
 *********************************************
 """
 
-# dice dictionary
-dice = {
-    '1' : 0,
-    '2' : 0,
-    '3' : 0,
-    '4' : 0,
-    '5' : 0,
-    '6' : 0,
-}
-
 # print welcome message, rules of the game and promt the user as to whether they would like to play
 print(welcome, rules, play_game)
+
+current_dice = [None] * 6
+dice_in_bank = []
+total_score = 0
+
+# Application should simulate rolling between 1 and 6 dice
+def roll_dice():
+    for i in range(len(current_dice)):
+        current_dice[i] = random.randint(1, 6)
+    print(current_dice)
+
+def bank_or_roll_again():
+    print(play_or_bank)
+    answer = str.capitalize(input())
+    if answer == "P":
+        roll_dice()
+    elif answer == "B":
+        capture_dice_banked()
+
+# Application should allow user to set aside dice each roll
+def capture_dice_banked():
+    print(bank_dice)
+    answer = input().split(' ')
+    banked_dice(answer)
+
+def banked_dice(arr):
+    for dice in arr:
+        dice_in_bank.append(dice)
+    set_dice_aside(dice_in_bank)
+
+def set_dice_aside(arr):
+    for dice in arr:
+        i = current_dice.index(int(dice))
+        current_dice.pop(i)
+    calculate_score()
+
+def calculate_score():
+    global total_score
+    print(enter_score)
+    answer = int(input())
+    total_score += answer
+    play_again()
+
+def play_again():
+    print(play_again_prompt)
+    answer = str(input())
+    """
+    *************************
+    WHERE I GOT TO LAST NIGHT
+    *************************
+    """
+def track_scores():
+    
+
+def game_controller():
+    roll_dice()
+    bank_or_roll_again()
+
+game_controller()
