@@ -62,64 +62,88 @@ Enter your score for this round (be honest!):
 *********************************************
 """
 
-# print welcome message, rules of the game and promt the user as to whether they would like to play
-print(welcome, rules, play_game)
+def initialize_game():
+    current_dice = [None] * 6
+    dice_in_bank = []
+    total_score = 0
+    start_game(current_dice, dice_in_bank, total_score)
 
-current_dice = [None] * 6
-dice_in_bank = []
-total_score = 0
+def start_game(arr1, arr2, num):
+    print(welcome, rules, play_game)
+    answer = str.capitalize(input())
+    if answer == "Y":
+        roll_dice(arr1, arr2, num)
+    elif answer == "N":
+        handle_quit()
+    else:
+        handle_validation(answer)
 
 # Application should simulate rolling between 1 and 6 dice
-def roll_dice():
-    for i in range(len(current_dice)):
-        current_dice[i] = random.randint(1, 6)
-    print(current_dice)
+def roll_dice(arr1, arr2, num):
+    for i in range(len(arr1)):
+        arr1[i] = random.randint(1, 6)
+    print(arr1)
+    bank_or_roll_again(arr1, arr2, num)
 
-def bank_or_roll_again():
+def bank_or_roll_again(arr1, arr2, num):
     print(play_or_bank)
     answer = str.capitalize(input())
+    print(answer)
     if answer == "P":
-        roll_dice()
+        roll_dice(arr1, arr2, num)
     elif answer == "B":
-        capture_dice_banked()
+        capture_dice_banked(arr1, arr2, num)
+    elif answer == "QUIT":
+        handle_quit(answer)
+    else:
+        handle_validation()
 
 # Application should allow user to set aside dice each roll
-def capture_dice_banked():
+def capture_dice_banked(arr1, arr2, num):
     print(bank_dice)
     answer = input().split(' ')
-    banked_dice(answer)
+    banked_dice(answer, arr1, arr2, num)
 
-def banked_dice(arr):
-    for dice in arr:
-        dice_in_bank.append(dice)
-    set_dice_aside(dice_in_bank)
+def banked_dice(answerArr, arr1, arr2, num):
+    for dice in answerArr:
+        arr2.append(dice)
+    set_dice_aside(answerArr, arr1, arr2, num)
 
-def set_dice_aside(arr):
-    for dice in arr:
-        i = current_dice.index(int(dice))
-        current_dice.pop(i)
-    calculate_score()
+def set_dice_aside(answerArr, arr1, arr2, num):
+    for dice in answerArr:
+        i = arr1.index(int(dice))
+        arr1.pop(i)
+    calculate_score(arr1, arr2, num)
 
-def calculate_score():
-    global total_score
+def calculate_score(arr1, arr2, num):
     print(enter_score)
-    answer = int(input())
-    total_score += answer
-    play_again()
+    round_score = int(input())
+    num += round_score
+    print(f'Score for this round is {round_score}. Total score is {num}')
+    play_again(arr1, arr2, num)
 
-def play_again():
+def play_again(arr1, arr2, num):
     print(play_again_prompt)
-    answer = str(input())
-    """
-    *************************
-    WHERE I GOT TO LAST NIGHT
-    *************************
-    """
-def track_scores():
-    
+    answer = str.capitalize(input())
+    print(answer)
+    if answer == "Y":
+        roll_dice(arr1, arr2, num)
+    elif answer == "QUIT":
+        handle_quit()
+    else:
+        handle_validation(answer)
+
+def handle_validation(str):
+    if str != "QUIT" or str != "P" or str != "B" or str != "Y" or str != "N":
+        print('Please enter an appropriate response or enter "Quit"')
+
+def handle_quit():
+    print(f'Ok. Hope to see you again soon')
+    exit()
+
+# def track_scores():
 
 def game_controller():
-    roll_dice()
-    bank_or_roll_again()
+    initialize_game()
 
 game_controller()
